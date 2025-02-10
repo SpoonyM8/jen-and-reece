@@ -5,7 +5,6 @@ import (
 	"jen-and-reece-backend/util"
 	"log"
 	"net/http"
-	"os"
 )
 
 func loginHandler(w http.ResponseWriter, r *http.Request) {
@@ -24,11 +23,8 @@ func loginHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func main() {
-	port := os.Getenv("PORT")
-	if port == "" {
-		port = "5001"
-	}
-	http.HandleFunc("/login", loginHandler)
+	port := "8080"
+	http.HandleFunc("/api/login", loginHandler)
 
 	err := http.ListenAndServe(":"+port, nil)
 	if err != nil {
