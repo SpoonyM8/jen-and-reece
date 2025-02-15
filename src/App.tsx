@@ -1,12 +1,12 @@
 import './App.css'
-import Login from './components/Login/Login'
+import Router from './components/Router/Router'
+import { AuthProvider } from './context/AuthContext'
 
 function App() {
-
   return (
-    <>
-      <Login />
-    </>
+    <AuthProvider>
+      <Router />
+    </AuthProvider>
   )
 }
 

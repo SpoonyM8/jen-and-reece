@@ -1,8 +1,9 @@
 import { Container, TextField, Button, Paper, Box } from "@mui/material";
 import { useForm } from "react-hook-form";
-import useFetch from "../../hooks/useFetch";
 import { useEffect } from "react";
-import { BASE_API_URL } from "../../consts";
+import BackdropSpinner from "../BackdropSpinner";
+import { useAuthContext } from "../../context/AuthContext";
+import useFetchLogin from "../../hooks/fetch/useFetchLogin";
 
 const Login = () => {
   const {
@@ -10,18 +11,22 @@ const Login = () => {
     handleSubmit,
     formState: { errors },
   } = useForm();
+  const { setToken } = useAuthContext();
+  const {data, loading, fetchData } = useFetchLogin();
 
-  const {data, fetchData } = useFetch(`${BASE_API_URL}/login`, { method: 'POST' });
-
-  const onSubmit = (data) => {
+  const onSubmit = async (data) => {
     fetchData({
       body: JSON.stringify(data)
-    })
-    console.log("Login Data:", data);
+    });
   };
 
   useEffect(() => {
-    if (data) console.log(data);
+    if (data) {
+      console.log(data)
+      setToken(data.token)
+      // create router
+      // store token around router context
+    }
   }, [data])
 
   return (
@@ -47,6 +52,7 @@ const Login = () => {
           </Box>
         </form>
       </Paper>
+      <BackdropSpinner shouldOpen={loading} />
     </Container>
   );
 };

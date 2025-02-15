@@ -1,1 +1,1 @@
-export const BASE_API_URL = 'https://jen-and-reece.fly.dev/api';
+export const BASE_API_URL = 'http://localhost:8080/api';

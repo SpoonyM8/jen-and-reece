@@ -1,14 +1,14 @@
 import { useState, useCallback } from "react";
 
-const useFetch = (url: string, options: RequestInit = {}) => {
-  const [data, setData] = useState(null);
+const useFetch = <TData>(url: string, options: RequestInit = {}) => {
+  const [data, setData] = useState<TData>();
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(null);
+  const [error, setError] = useState<string>('');
 
   const fetchData = useCallback(
     async (customOptions: RequestInit = {}) => {
       setLoading(true);
-      setError(null);
+      setError('');
 
       try {
         const response = await fetch(url, { ...options, ...customOptions });
@@ -18,8 +18,7 @@ const useFetch = (url: string, options: RequestInit = {}) => {
         const result = await response.json();
         setData(result);
       } catch (err) {
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        setError((err as any).message);
+        setError((err as BackendError).error);
       } finally {
         setLoading(false);
       }
