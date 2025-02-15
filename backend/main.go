@@ -1,35 +1,33 @@
 package main
 
 import (
-	"encoding/json"
-	"jen-and-reece-backend/util"
+	"jen-and-reece-backend/db"
+	"jen-and-reece-backend/service"
 	"log"
 	"net/http"
+
+	"github.com/gorilla/mux"
 )
 
-func loginHandler(w http.ResponseWriter, r *http.Request) {
-	if r.Method == http.MethodPost {
-		w.Header().Set("Content-Type", "application/json")
-		tok, err := util.GenerateJwt()
-		if err != nil {
-			w.WriteHeader(http.StatusInternalServerError)
-			json.NewEncoder(w).Encode(map[string]string{"error": err.Error()})
-		}
-
-		json.NewEncoder(w).Encode(map[string]string{"token": tok})
-	} else {
-		http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
-	}
+func setContentTypeMiddleware(r *mux.Router, contentType string) {
+	r.Use(func(next http.Handler) http.Handler {
+		return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+			w.Header().Set("Content-Type", contentType)
+			next.ServeHTTP(w, r)
+		})
+	})
 }
 
 func main() {
-	port := "8080"
-	http.HandleFunc("/api/login", loginHandler)
+	r := mux.NewRouter()
+	setContentTypeMiddleware(r, "application/json")
+	db.InitDB()
+	apiRouter := r.PathPrefix("/api").Subrouter()
+	apiRouter.Methods("POST").Path("/login").HandlerFunc(service.HandleLogin)
 
-	err := http.ListenAndServe(":"+port, nil)
+	log.Printf("Server started on port 8080")
+	err := http.ListenAndServe(":8080", r)
 	if err != nil {
 		log.Fatalf("Server failed: %s", err)
-	} else {
-		log.Printf("Server running on port %s", port)
 	}
 }
