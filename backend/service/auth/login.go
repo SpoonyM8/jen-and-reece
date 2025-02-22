@@ -1,4 +1,4 @@
-package service
+package authService
 
 import (
 	"encoding/json"
@@ -16,7 +16,6 @@ type Login struct {
 
 func HandleLogin(w http.ResponseWriter, r *http.Request) {
 	var body Login
-	w.Header().Set("Access-Control-Allow-Origin", "*")
 
 	if err := json.NewDecoder(r.Body).Decode(&body); err != nil {
 		log.Printf("%s %s", err, body)
