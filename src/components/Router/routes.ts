@@ -1,4 +1,5 @@
 import Login from "../Login/Login";
+import Home from "../Home/Home";
 
 export const routes = [
   {
@@ -8,5 +9,9 @@ export const routes = [
   {
     path: '/login',
     getElement: Login
+  },
+  {
+    path: '/home',
+    getElement: Home
   }
 ]

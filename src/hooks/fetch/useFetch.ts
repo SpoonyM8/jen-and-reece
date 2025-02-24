@@ -1,4 +1,5 @@
 import { useState, useCallback } from "react";
+import { BackendError } from "./types";
 
 const useFetch = <TData>(url: string, options: RequestInit = {}) => {
   const [data, setData] = useState<TData>();
@@ -20,7 +21,7 @@ const useFetch = <TData>(url: string, options: RequestInit = {}) => {
       } catch (err) {
         setError((err as BackendError).error);
       } finally {
-        setLoading(false);
+      setLoading(false);
       }
     },
     [url, options]

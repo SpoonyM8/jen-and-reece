@@ -38,10 +38,10 @@ func main() {
 	apiRouter.Methods("GET").Path("/task/{categoryId}").HandlerFunc(taskService.HandleGetTasks)
 	apiRouter.Methods("PATCH").Path("/task").HandlerFunc(taskService.HandleEditTask)
 
-	corsObj := handlers.AllowedOrigins([]string{"*"})
-
 	log.Printf("Server started on port 8080")
-	err := http.ListenAndServe(":8080", handlers.CORS(corsObj)(r))
+	err := http.ListenAndServe(":8080", handlers.CORS(
+		handlers.AllowedOrigins([]string{"*"}),
+		handlers.AllowedMethods([]string{"GET", "POST", "DELETE", "PATCH"}))(r))
 	if err != nil {
 		log.Fatalf("Server failed: %s", err)
 	}
