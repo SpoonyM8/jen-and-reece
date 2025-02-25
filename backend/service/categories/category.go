@@ -43,8 +43,14 @@ func HandleCreateCategory(w http.ResponseWriter, r *http.Request) {
 
 	name := body.Name
 
-	db.DB.Exec(`INSERT INTO category (name) VALUES ($1) `, name)
-	w.WriteHeader(http.StatusNoContent)
+	res := CategoryId{}
+
+	row := db.DB.QueryRow(`INSERT INTO category (name) VALUES ($1) RETURNING id`, name)
+
+	row.Scan(&res.Id)
+
+	w.WriteHeader(http.StatusOK)
+	json.NewEncoder(w).Encode(res)
 }
 
 func HandleDeleteCategory(w http.ResponseWriter, r *http.Request) {

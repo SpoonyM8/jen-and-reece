@@ -1,0 +1,58 @@
+import { IconButton, ListItem, ListItemText, TextField } from "@mui/material";
+import EditIcon from '@mui/icons-material/Edit';
+import DeleteIcon from '@mui/icons-material/Delete';
+import CheckIcon from '@mui/icons-material/Check';
+import { FC, useRef, useState } from "react";
+import { Category } from "../../types";
+import useFetchCategories from "../../hooks/fetch/useFetchCategories";
+
+type CategoryProps = {
+  category: Category;
+  onCategoryClick: () => void;
+  onDeleteClick: () => void;
+  onEditCategory: (category: Category) => void;
+}
+const CategoryComponent: FC<CategoryProps> = ({ category, onCategoryClick, onDeleteClick, onEditCategory }) => {
+  const [isEditing, setIsEditing] = useState(false);
+  const [newCategoryName, setNewCategoryName] = useState('');
+  const { fetchData } = useFetchCategories();
+
+  const onEditClick = () => {
+    setIsEditing(!isEditing);
+    
+    if (isEditing) {
+      const newCategory = {
+        id: category.id,
+        name: newCategoryName
+      }
+      onEditCategory(newCategory);
+      fetchData({
+        method: 'PATCH',
+        body: JSON.stringify(newCategory)
+      });
+    }
+
+  };
+
+  return (
+    <>
+      <ListItem  key={category.id}>
+        { isEditing ? <TextField 
+            fullWidth autoFocus 
+            value={ newCategoryName || category.name }
+            onChange={(e) => setNewCategoryName(e.target.value)}
+            /> 
+          : 
+          <ListItemText primary={category.name} onClick={onCategoryClick} sx={{ textAlign: 'center' }}/> }
+        <IconButton onClick={() => onEditClick()}>
+          { isEditing ? <CheckIcon /> : <EditIcon />  }
+        </IconButton>
+        <IconButton onClick={onDeleteClick} edge='end'>
+          <DeleteIcon />
+        </IconButton>
+      </ListItem>
+    </>
+  )
+}
+
+export default CategoryComponent;

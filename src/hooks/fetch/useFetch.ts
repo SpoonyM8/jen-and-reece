@@ -18,10 +18,11 @@ const useFetch = <TData>(url: string, options: RequestInit = {}) => {
         }
         const result = await response.json();
         setData(result);
+        return result;
       } catch (err) {
         setError((err as BackendError).error);
       } finally {
-      setLoading(false);
+        setLoading(false);
       }
     },
     [url, options]
