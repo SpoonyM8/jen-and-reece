@@ -1,17 +1,20 @@
 import Login from "../Login/Login";
 import Home from "../Home/Home";
 
-export const routes = [
+export const unprotectedRoutes = [
   {
     path: '/',
-    getElement: Login
+    element: <Login />
   },
   {
     path: '/login',
-    getElement: Login
+    element: <Login />
   },
+];
+
+export const protectedRoutes = [
   {
     path: '/home',
-    getElement: Home
+    element: <Home />
   }
-]
+];

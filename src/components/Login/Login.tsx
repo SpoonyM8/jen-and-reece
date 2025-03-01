@@ -4,6 +4,7 @@ import { useEffect } from "react";
 import BackdropSpinner from "../BackdropSpinner";
 import { useAuthContext } from "../../context/AuthContext";
 import useFetchLogin from "../../hooks/fetch/useFetchLogin";
+import { useNavigate } from "react-router-dom";
 
 const Login = () => {
   const {
@@ -13,6 +14,7 @@ const Login = () => {
   } = useForm();
   const { setToken } = useAuthContext();
   const {data, loading, fetchData } = useFetchLogin();
+  const navigate = useNavigate();
 
   const onSubmit = async (data) => {
     fetchData({
@@ -23,8 +25,7 @@ const Login = () => {
   useEffect(() => {
     if (data) {
       setToken(data.token)
-      // create router
-      // store token around router context
+      navigate('/home');
     }
   }, [data])
 
