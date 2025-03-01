@@ -22,7 +22,6 @@ const Login = () => {
 
   useEffect(() => {
     if (data) {
-      console.log(data)
       setToken(data.token)
       // create router
       // store token around router context

@@ -14,7 +14,7 @@ type AuthProviderProps = {
 }
 export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const [token, setToken] = useState('');
-  console.log(token)
+
   return (
     <AuthContext.Provider value={{ token, setToken }}>
       {children}

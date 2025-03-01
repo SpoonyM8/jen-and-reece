@@ -3,22 +3,28 @@ import { FC, useRef, useState } from "react";
 import AddIcon from '@mui/icons-material/Add';
 import MinusIcon from '@mui/icons-material/Minimize';
 import CheckIcon from '@mui/icons-material/Check'
-import useFetchCategories from "../../hooks/fetch/useFetchCategories";
+import useFetchTasks from "../../hooks/fetch/useFetchTasks";
+import { Task } from "../../types";
 
-type NewItemProps = {
-  onAddNewItem: (id: number, name: string) => void;
+type NewTaskProps = {
+  categoryId: number;
+  onAddNewTask: (task: Task) => void;
 }
-const NewItem: FC<NewItemProps> = ({ onAddNewItem }) => {
+const NewTask: FC<NewTaskProps> = ({ onAddNewTask, categoryId }) => {
   const [expanded, setExpanded] = useState(false);
-  const { fetchData } = useFetchCategories();
+  const { fetchData } = useFetchTasks();
   const textFieldRef = useRef('');
 
   const onAdd = async () => {
     const res = await fetchData({
       method: 'POST',
-      body: JSON.stringify({ name: textFieldRef.current })
+      body: JSON.stringify({ categoryId, description: textFieldRef.current })
     })
-    onAddNewItem(res.id, textFieldRef.current);
+    onAddNewTask({
+      id: Number(res.id),
+      description: textFieldRef.current,
+      categoryId: categoryId
+    });
     setExpanded(false);
     textFieldRef.current = '';
   }
@@ -44,4 +50,4 @@ const NewItem: FC<NewItemProps> = ({ onAddNewItem }) => {
   )
 }
 
-export default NewItem;
+export default NewTask;

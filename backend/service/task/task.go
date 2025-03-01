@@ -33,11 +33,6 @@ type Task struct {
 	TaskId
 }
 
-type TasKWithoutCategoryId struct {
-	TaskId
-	Description string `json:"description"`
-}
-
 func HandleCreateTask(w http.ResponseWriter, r *http.Request) {
 	var body NewTask
 
@@ -48,11 +43,14 @@ func HandleCreateTask(w http.ResponseWriter, r *http.Request) {
 	description := body.Description
 	categoryId := body.CategoryId
 
-	_, err := db.DB.Exec(`INSERT INTO task (category_id, description) VALUES ($1, $2) `, categoryId, description)
-	if err != nil {
-		log.Printf("%s", err)
-	}
-	w.WriteHeader(http.StatusNoContent)
+	res := TaskId{}
+
+	row := db.DB.QueryRow(`INSERT INTO task (category_id, description) VALUES ($1, $2) RETURNING id`, categoryId, description)
+
+	row.Scan(&res.Id)
+
+	w.WriteHeader(http.StatusOK)
+	json.NewEncoder(w).Encode(res)
 }
 
 func HandleDeleteTask(w http.ResponseWriter, r *http.Request) {
@@ -64,24 +62,25 @@ func HandleDeleteTask(w http.ResponseWriter, r *http.Request) {
 
 	id := body.Id
 	categoryId := body.CategoryId
-
+	log.Printf("HERE %d %d", id, categoryId)
 	_, err := db.DB.Exec(`DELETE FROM task WHERE id=$1 AND category_id=$2`, id, categoryId)
-
+	log.Printf("EXEC'd")
 	if err != nil {
 		log.Printf("%s", err)
 	}
+	log.Printf("RETURNING")
 	w.WriteHeader(http.StatusNoContent)
 }
 
 func HandleGetTasks(w http.ResponseWriter, r *http.Request) {
 	categoryId, _ := strconv.Atoi(mux.Vars(r)["categoryId"])
 
-	rows, _ := db.DB.Query(`SELECT id, description FROM task WHERE category_id=$1`, categoryId)
-	res := []TasKWithoutCategoryId{}
+	rows, _ := db.DB.Query(`SELECT id, description, category_id FROM task WHERE category_id=$1`, categoryId)
+	res := []Task{}
 
 	for rows.Next() {
-		var row TasKWithoutCategoryId
-		rows.Scan(&row.Id, &row.Description)
+		var row Task
+		rows.Scan(&row.Id, &row.Description, &row.CategoryId)
 		res = append(res, row)
 	}
 

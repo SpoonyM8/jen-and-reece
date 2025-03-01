@@ -4,7 +4,7 @@ export type Category = {
 }
 
 export type Task = {
-  category_id: number;
+  categoryId: number;
   id: number;
   description: string;
 }

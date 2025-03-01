@@ -1,10 +1,8 @@
 import { useEffect, useState } from "react";
-import { Grid, IconButton, List, ListItem, ListItemText } from "@mui/material";
-import DeleteIcon from '@mui/icons-material/Delete';
-import EditIcon from '@mui/icons-material/Edit';
+import { Grid, List } from "@mui/material";
 import useFetchCategories from "../../hooks/fetch/useFetchCategories";
 import Tasks from "./Tasks";
-import NewItem from "./NewItem";
+import NewCategory from "./NewCategory";
 import { Category } from "../../types";
 import CategoryComponent from "./Category";
 
@@ -32,7 +30,7 @@ const Categories = () => {
     setCategories(categories.filter(category => category.id !== id))
   }
 
-  const onAddNewItem = (id: number, name: string) => {
+  const onAddNewCategory = (id: number, name: string) => {
     setCategories([{
       id,
       name
@@ -51,6 +49,11 @@ const Categories = () => {
     setCategories(newCategories);
   }
 
+  const onCategoryClick = (categoryId: number) => {
+    setActiveCategory(categoryId);
+
+  }
+
   return (
     <Grid
       container
@@ -61,13 +64,16 @@ const Categories = () => {
     >
       <Grid item xs={12} sm={3}>
         <List>
-          <NewItem onAddNewItem={onAddNewItem}/>
+          <NewCategory onAddNewCategory={onAddNewCategory}/>
           {categories?.map((category) => (
-            <CategoryComponent category={category} onCategoryClick={() => setActiveCategory(category.id)} onDeleteClick={() => handleDeleteCategory(category.id)} onEditCategory={onEditCategory}/>
+            <CategoryComponent key={category.id + category.name} category={category} onCategoryClick={() => onCategoryClick(category.id)} onDeleteClick={() => handleDeleteCategory(category.id)} onEditCategory={onEditCategory}/>
           ))}
         </List>
       </Grid>
-      <Tasks categoryId={activeCategory} />
+      <Grid item xs={12} sm={3}>
+        <Tasks categoryId={activeCategory} />
+      </Grid>
+
     </Grid>
   );
 };
