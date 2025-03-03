@@ -2,7 +2,7 @@ import { IconButton, ListItem, ListItemText, TextField } from "@mui/material";
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import CheckIcon from '@mui/icons-material/Check';
-import { FC, useRef, useState } from "react";
+import { FC, useState } from "react";
 import { Category } from "../../types";
 import useFetchCategories from "../../hooks/fetch/useFetchCategories";
 

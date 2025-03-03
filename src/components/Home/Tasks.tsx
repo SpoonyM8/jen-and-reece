@@ -53,18 +53,15 @@ const Tasks: FC<TasksProps> = ({ categoryId }) => {
     );
   }
 
-  if (!tasks || tasks.length === 0) {
-    return (
-        <Typography variant="h6" color="text.secondary" sx={{ textAlign: "center", mt: 2 }}>
-          No tasks available
-        </Typography>
-    );
-  }
-
   return (
       <List>
         { categoryId && <NewTask categoryId={categoryId} onAddNewTask={onCreateTask}/> }
-        {tasks && tasks.map((task) => <TaskComponent task={task} onEdit={onEditTask} onDelete={onDeleteTask}/>)}
+        {tasks ? tasks.map((task) => <TaskComponent task={task} onEdit={onEditTask} onDelete={onDeleteTask}/>)
+        :
+        <Typography variant="h6" color="text.secondary" sx={{ textAlign: "center", mt: 2 }}>
+          No tasks available
+        </Typography>
+        }
       </List>
   )
 
