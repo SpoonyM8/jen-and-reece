@@ -27,7 +27,7 @@ const NewCategory: FC<NewCategoryProps> = ({ onAddNewCategory }) => {
     <>
       <ListItem sx={{ justifyContent: 'center' }}>
         <IconButton onClick={() => setExpanded(!expanded)} edge='end'>
-          {expanded ? <MinusIcon /> : <AddIcon />} 
+          {expanded ? <MinusIcon color="info"/> : <AddIcon color="info"/>} 
         </IconButton>
       </ListItem>
       <ListItem>
@@ -35,7 +35,7 @@ const NewCategory: FC<NewCategoryProps> = ({ onAddNewCategory }) => {
           <>
             <TextField fullWidth size='small' autoFocus onChange={(e) => textFieldRef.current = e.target.value}/>
             <IconButton edge='end'>
-              <CheckIcon onClick={() => onAdd()}/>
+              <CheckIcon onClick={() => onAdd()} color="success"/>
             </IconButton>
           </>
         )}

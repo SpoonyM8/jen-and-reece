@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Divider, Grid, List, Typography } from "@mui/material";
+import { Grid, List, Typography } from "@mui/material";
 import useFetchCategories from "../../hooks/fetch/useFetchCategories";
 import Tasks from "./Tasks";
 import NewCategory from "./NewCategory";
@@ -57,14 +57,14 @@ const Categories = () => {
   return (
     <Grid
       container
-      justifyContent="space-between"
+      justifyContent="center"
       position='absolute'
       top='25%'
-      style={{ wordWrap: 'break-word' }}
-      spacing={4}
+      overflow="visible"
+      spacing={0}
     >
       <Grid item xs={6} sm={3}>
-        <Typography variant="h4">
+        <Typography variant="h5">
           Categories
         </Typography>
         <List>
@@ -75,7 +75,7 @@ const Categories = () => {
         </List>
       </Grid>
       <Grid item xs={6} sm={3}>
-        <Typography variant="h4">
+        <Typography variant="h5">
           Tasks
         </Typography>
         <Tasks categoryId={activeCategory} />

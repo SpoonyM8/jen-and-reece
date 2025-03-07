@@ -33,15 +33,15 @@ const NewTask: FC<NewTaskProps> = ({ onAddNewTask, categoryId }) => {
     <>
       <ListItem sx={{justifyContent: 'center'}}>
         <IconButton onClick={() => setExpanded(!expanded)}>
-          {expanded ? <MinusIcon /> : <AddIcon />} 
+          {expanded ? <MinusIcon color="info"/> : <AddIcon color="info"/>} 
         </IconButton>
       </ListItem>
-      <ListItem>
+      <ListItem sx={{justifyContent: 'center' }}>
         {expanded && (
           <>
             <TextField fullWidth size='small' autoFocus onChange={(e) => textFieldRef.current = e.target.value}/>
-            <IconButton edge='end'>
-              <CheckIcon onClick={() => onAdd()}/>
+            <IconButton edge='end' size='small'>
+              <CheckIcon onClick={() => onAdd()} color="success"/>
             </IconButton>
           </>
         )}

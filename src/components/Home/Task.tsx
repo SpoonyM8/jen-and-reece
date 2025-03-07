@@ -13,7 +13,7 @@ type TaskProps = {
 }
 const TaskComponent: FC<TaskProps> = ({ task, onEdit, onDelete }) => {
   const [isEditing, setIsEditing] = useState(false);
-  const [newTaskDescription, setNewTaskDescription] = useState('');
+  const [newTaskDescription, setNewTaskDescription] = useState(task.description);
   const { fetchData } = useFetchTasks();
 
   const onEditClick = () => {
@@ -47,18 +47,18 @@ const TaskComponent: FC<TaskProps> = ({ task, onEdit, onDelete }) => {
   return (
     <ListItem key={task.categoryId + ':' + task.id}>
       { isEditing ? <TextField
-        fullWidth autoFocus
+        autoFocus
         value={ newTaskDescription || task.description }
         onChange={(e) => setNewTaskDescription(e.target.value)} 
         />
         :
         <ListItemText primary={task.description} sx={{ textAlign: 'center' }}/>
       }
-      <IconButton onClick={onEditClick}>
-        { isEditing ? <CheckIcon /> : <EditIcon />  }
+      <IconButton onClick={onEditClick} edge="end">
+        { isEditing ? <CheckIcon color="success"/> : <EditIcon color="warning"/>  }
       </IconButton>
       <IconButton onClick={onDeleteClick} edge='end'>
-        <DeleteIcon />
+        <DeleteIcon color="error"/>
       </IconButton>
     </ListItem>
   )
