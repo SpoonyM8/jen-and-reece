@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Grid, List } from "@mui/material";
+import { Divider, Grid, List, Typography } from "@mui/material";
 import useFetchCategories from "../../hooks/fetch/useFetchCategories";
 import Tasks from "./Tasks";
 import NewCategory from "./NewCategory";
@@ -57,20 +57,27 @@ const Categories = () => {
   return (
     <Grid
       container
-      justifyContent="center"
-      alignItems="center"
-      style={{ minHeight: '100vh', wordWrap: 'break-word' }}
-      spacing={12}
+      justifyContent="space-between"
+      position='absolute'
+      top='25%'
+      style={{ wordWrap: 'break-word' }}
+      spacing={4}
     >
-      <Grid item xs={12} sm={3}>
+      <Grid item xs={6} sm={3}>
+        <Typography variant="h4">
+          Categories
+        </Typography>
         <List>
-          <NewCategory onAddNewCategory={onAddNewCategory}/>
+          <NewCategory onAddNewCategory={onAddNewCategory} />
           {categories?.map((category) => (
-            <CategoryComponent key={category.id + category.name} category={category} onCategoryClick={() => onCategoryClick(category.id)} onDeleteClick={() => handleDeleteCategory(category.id)} onEditCategory={onEditCategory}/>
+            <CategoryComponent key={category.id + category.name} isActive={activeCategory === category.id} category={category} onCategoryClick={() => onCategoryClick(category.id)} onDeleteClick={() => handleDeleteCategory(category.id)} onEditCategory={onEditCategory}/>
           ))}
         </List>
       </Grid>
-      <Grid item xs={12} sm={3}>
+      <Grid item xs={6} sm={3}>
+        <Typography variant="h4">
+          Tasks
+        </Typography>
         <Tasks categoryId={activeCategory} />
       </Grid>
 

@@ -25,16 +25,16 @@ const NewCategory: FC<NewCategoryProps> = ({ onAddNewCategory }) => {
   
   return (
     <>
-      <ListItem>
-        <IconButton onClick={() => setExpanded(!expanded)}>
+      <ListItem sx={{ justifyContent: 'center' }}>
+        <IconButton onClick={() => setExpanded(!expanded)} edge='end'>
           {expanded ? <MinusIcon /> : <AddIcon />} 
         </IconButton>
       </ListItem>
       <ListItem>
         {expanded && (
           <>
-            <TextField size='small' autoFocus onChange={(e) => textFieldRef.current = e.target.value}/>
-            <IconButton>
+            <TextField fullWidth size='small' autoFocus onChange={(e) => textFieldRef.current = e.target.value}/>
+            <IconButton edge='end'>
               <CheckIcon onClick={() => onAdd()}/>
             </IconButton>
           </>

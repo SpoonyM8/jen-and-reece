@@ -56,7 +56,7 @@ const Tasks: FC<TasksProps> = ({ categoryId }) => {
   return (
       <List>
         { categoryId && <NewTask categoryId={categoryId} onAddNewTask={onCreateTask}/> }
-        {tasks ? tasks.map((task) => <TaskComponent task={task} onEdit={onEditTask} onDelete={onDeleteTask}/>)
+        {tasks && tasks.length > 0 ? tasks.map((task) => <TaskComponent task={task} onEdit={onEditTask} onDelete={onDeleteTask}/>)
         :
         <Typography variant="h6" color="text.secondary" sx={{ textAlign: "center", mt: 2 }}>
           No tasks available

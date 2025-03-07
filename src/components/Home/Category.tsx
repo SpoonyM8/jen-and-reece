@@ -11,8 +11,9 @@ type CategoryProps = {
   onCategoryClick: () => void;
   onDeleteClick: () => void;
   onEditCategory: (category: Category) => void;
+  isActive: boolean;
 }
-const CategoryComponent: FC<CategoryProps> = ({ category, onCategoryClick, onDeleteClick, onEditCategory }) => {
+const CategoryComponent: FC<CategoryProps> = ({ category, onCategoryClick, onDeleteClick, onEditCategory, isActive }) => {
   const [isEditing, setIsEditing] = useState(false);
   const [newCategoryName, setNewCategoryName] = useState('');
   const { fetchData } = useFetchCategories();
@@ -43,7 +44,7 @@ const CategoryComponent: FC<CategoryProps> = ({ category, onCategoryClick, onDel
             onChange={(e) => setNewCategoryName(e.target.value)}
             /> 
           : 
-          <ListItemText primary={category.name} onClick={onCategoryClick} sx={{ textAlign: 'center' }}/> }
+          <ListItemText primary={category.name} slotProps={{primary: { fontWeight: isActive ? 'bold' : 'normal'}}} onClick={onCategoryClick} sx={{ textAlign: 'center' }}/> }
         <IconButton onClick={() => onEditClick()}>
           { isEditing ? <CheckIcon /> : <EditIcon />  }
         </IconButton>
