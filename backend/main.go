@@ -5,14 +5,15 @@ import (
 	authService "jen-and-reece-backend/service/auth"
 	categoryService "jen-and-reece-backend/service/categories"
 	taskService "jen-and-reece-backend/service/task"
+	"jen-and-reece-backend/util"
 	"log"
 	"net/http"
 
-	"github.com/gorilla/handlers"
 	"github.com/gorilla/mux"
+	"github.com/rs/cors"
 )
 
-func setContentTypeMiddleware(r *mux.Router, contentType string) {
+func setHeaderMiddleware(r *mux.Router, contentType string) {
 	r.Use(func(next http.Handler) http.Handler {
 		return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 			w.Header().Set("Content-Type", contentType)
@@ -21,12 +22,29 @@ func setContentTypeMiddleware(r *mux.Router, contentType string) {
 	})
 }
 
+func verifyJwtMiddleware(r *mux.Router) {
+	r.Use(func(next http.Handler) http.Handler {
+		return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+			if r.URL.Path != "/api/login" {
+				err := util.VerifyJwt(r.Header.Get("Authorization"))
+				if err != nil {
+					w.WriteHeader(http.StatusUnauthorized)
+				} else {
+					next.ServeHTTP(w, r)
+				}
+			} else {
+				next.ServeHTTP(w, r)
+			}
+		})
+	})
+}
+
 func main() {
 	r := mux.NewRouter()
-	setContentTypeMiddleware(r, "application/json")
-	// @todo: verify jwt middleware
-	db.InitDB()
+	setHeaderMiddleware(r, "application/json")
+	verifyJwtMiddleware(r)
 
+	db.InitDB()
 	apiRouter := r.PathPrefix("/api").Subrouter()
 	apiRouter.Methods("POST").Path("/login").HandlerFunc(authService.HandleLogin)
 	apiRouter.Methods("GET").Path("/category").HandlerFunc(categoryService.HandleGetCategories)
@@ -39,9 +57,14 @@ func main() {
 	apiRouter.Methods("PATCH").Path("/task").HandlerFunc(taskService.HandleEditTask)
 
 	log.Printf("Server started on port 8080")
-	err := http.ListenAndServe(":8080", handlers.CORS(
-		handlers.AllowedOrigins([]string{"*"}),
-		handlers.AllowedMethods([]string{"GET", "POST", "DELETE", "PATCH"}))(r))
+
+	c := cors.New(cors.Options{
+		AllowedOrigins: []string{"*"},
+		AllowedMethods: []string{"GET", "OPTIONS", "POST", "DELETE", "PATCH"},
+		AllowCredentials: true,
+		AllowedHeaders: []string{"Authorization", "Content-Type"},
+	})
+	err := http.ListenAndServe(":8080", c.Handler(r))
 	if err != nil {
 		log.Fatalf("Server failed: %s", err)
 	}

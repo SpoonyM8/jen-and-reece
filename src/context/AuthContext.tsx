@@ -3,20 +3,32 @@ import { createContext, useState, useContext, ReactNode } from "react";
 interface IAuthContext {
   token: string;
   setToken: (newToken: string) => void;
+  removeToken: () => void;
 }
 const AuthContext = createContext<IAuthContext>({
   token: '',
-  setToken: () => {}
+  setToken: () => {},
+  removeToken: () => {}
 });
 
 type AuthProviderProps = {
   children: ReactNode
 }
 export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
-  const [token, setToken] = useState('');
+  const [token, setTokenState] = useState(localStorage.getItem('token') || '');
+
+  const setToken = (tok: string) => {
+    setTokenState(tok);
+    localStorage.setItem('token', tok)
+  }
+
+  const removeToken = () => {
+    setTokenState('');
+    localStorage.removeItem('token');
+  }
 
   return (
-    <AuthContext.Provider value={{ token, setToken }}>
+    <AuthContext.Provider value={{ token, setToken, removeToken }}>
       {children}
     </AuthContext.Provider>
   );

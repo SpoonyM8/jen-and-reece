@@ -62,13 +62,10 @@ func HandleDeleteTask(w http.ResponseWriter, r *http.Request) {
 
 	id := body.Id
 	categoryId := body.CategoryId
-	log.Printf("HERE %d %d", id, categoryId)
 	_, err := db.DB.Exec(`DELETE FROM task WHERE id=$1 AND category_id=$2`, id, categoryId)
-	log.Printf("EXEC'd")
 	if err != nil {
 		log.Printf("%s", err)
 	}
-	log.Printf("RETURNING")
 	w.WriteHeader(http.StatusNoContent)
 }
 
