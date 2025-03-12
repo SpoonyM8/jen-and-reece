@@ -48,7 +48,7 @@ const TaskComponent: FC<TaskProps> = ({ task, onEdit, onDelete }) => {
     <ListItem key={task.categoryId + ':' + task.id}>
       { isEditing ? <TextField
         autoFocus
-        value={ newTaskDescription || task.description }
+        value={ newTaskDescription }
         onChange={(e) => setNewTaskDescription(e.target.value)} 
         />
         :
