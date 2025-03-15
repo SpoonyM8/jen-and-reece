@@ -17,7 +17,7 @@ CREATE TABLE IF NOT EXISTS task (
 
 CREATE TABLE IF NOT EXISTS exercise (
   id INTEGER PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
-  name varchar(255)
+  name varchar(255) UNIQUE
 );
 
 CREATE TABLE IF NOT EXISTS exercise_log (
@@ -37,7 +37,7 @@ CREATE TABLE IF NOT EXISTS exercise_log (
 
 CREATE TABLE IF NOT EXISTS workout_template (
   id INTEGER PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
-  name varchar(255)
+  name varchar(255) UNIQUE
 );
 
 CREATE TABLE IF NOT EXISTS workout_template_exercise (
