@@ -63,6 +63,7 @@ func main() {
 	apiRouter.Methods("POST").Path("/exercise/template").HandlerFunc(gymService.HandleCreateWorkoutTemplate)
 	apiRouter.Methods("PATCH").Path("/exercise/template").HandlerFunc(gymService.HandleEditWorkoutTemplate)
 	apiRouter.Methods("DELETE").Path("/exercise/template").HandlerFunc(gymService.HandleDeleteWorkoutTemplate)
+	apiRouter.Methods("GET").Path("/exercise/template").HandlerFunc(gymService.HandleGetWorkoutTemplates)
 
 	log.Printf("Server started on port 8080")
 

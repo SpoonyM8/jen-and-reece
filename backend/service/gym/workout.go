@@ -5,6 +5,8 @@ import (
 	"jen-and-reece-backend/db"
 	"log"
 	"net/http"
+
+	"github.com/lib/pq"
 )
 
 type WorkoutTemplateId struct {
@@ -17,7 +19,30 @@ type WorkoutTemplate struct {
 }
 
 func HandleGetWorkoutTemplates(w http.ResponseWriter, r *http.Request) {
-	// return []WorkoutTemplate
+	rows, err := db.DB.Query("SELECT wt.id, wt.name, ARRAY_AGG(wte.exercise_id) AS wteeid FROM workout_template wt JOIN workout_template_exercise wte ON wt.id=wte.workout_template_id GROUP BY wt.id, wt.name") //@TODO: FIX THIS QUERY
+	if err != nil {
+		log.Printf("%v", err)
+		return
+	}
+
+	var res []WorkoutTemplate
+
+	for rows.Next() {
+		var workoutTemplate WorkoutTemplate
+		var exerciseId []int64
+
+		rows.Scan(&workoutTemplate.TemplateId, &workoutTemplate.Name, pq.Array((&exerciseId)))
+
+		workoutTemplate.ExerciseIds = make([]int, len(exerciseId))
+		for i, v := range exerciseId {
+			workoutTemplate.ExerciseIds[i] = int(v)
+		}
+
+		res = append(res, workoutTemplate)
+	}
+
+	w.WriteHeader(http.StatusOK)
+	json.NewEncoder(w).Encode(res)
 }
 
 func HandleCreateWorkoutTemplate(w http.ResponseWriter, r *http.Request) {
@@ -61,7 +86,6 @@ func HandleEditWorkoutTemplate(w http.ResponseWriter, r *http.Request) {
 		var row int
 		rows.Scan(&row)
 		existingExerciseIds = append(existingExerciseIds, row)
-		log.Printf("%d", row)
 	}
 
 	for _, newId := range body.ExerciseIds {
