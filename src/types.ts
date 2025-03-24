@@ -8,3 +8,19 @@ export type Task = {
   id: number;
   description: string;
 }
+
+type ExerciseSet = {
+  weight: number,
+  reps: number
+}
+
+export type ExerciseSets = {
+  firstSet: ExerciseSet,
+  secondSet?: ExerciseSet,
+  thirdSet?: ExerciseSet,
+  fourthSet?: ExerciseSet
+}
+
+export type ExerciseSetsByName = {
+  [exerciseName: string]: ExerciseSets
+}
