@@ -19,7 +19,7 @@ type WorkoutTemplate struct {
 }
 
 func HandleGetWorkoutTemplates(w http.ResponseWriter, r *http.Request) {
-	rows, err := db.DB.Query("SELECT wt.id, wt.name, ARRAY_AGG(wte.exercise_id) AS wteeid FROM workout_template wt JOIN workout_template_exercise wte ON wt.id=wte.workout_template_id GROUP BY wt.id, wt.name") //@TODO: FIX THIS QUERY
+	rows, err := db.DB.Query("SELECT wt.id, wt.name, ARRAY_AGG(wte.exercise_id) AS wteeid FROM workout_template wt JOIN workout_template_exercise wte ON wt.id=wte.workout_template_id GROUP BY wt.id, wt.name")
 	if err != nil {
 		log.Printf("%v", err)
 		return

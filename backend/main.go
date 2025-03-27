@@ -29,6 +29,7 @@ func verifyJwtMiddleware(r *mux.Router) {
 			if r.URL.Path != "/api/login" {
 				err := util.VerifyJwt(r.Header.Get("Authorization"))
 				if err != nil {
+					log.Printf("err in verifyjwt")
 					w.WriteHeader(http.StatusUnauthorized)
 				} else {
 					next.ServeHTTP(w, r)
@@ -60,6 +61,7 @@ func main() {
 	apiRouter.Methods("POST").Path("/exercise").HandlerFunc(gymService.HandleCreateExercise)
 	apiRouter.Methods("PATCH").Path("/exercise").HandlerFunc(gymService.HandleEditExercise)
 	apiRouter.Methods("POST").Path("/exercise/log").HandlerFunc(gymService.HandleLogExercise)
+	apiRouter.Methods("GET").Path("/exercise/log/{exerciseId}").HandlerFunc(gymService.HandleGetExerciseHistory)
 	apiRouter.Methods("POST").Path("/exercise/template").HandlerFunc(gymService.HandleCreateWorkoutTemplate)
 	apiRouter.Methods("PATCH").Path("/exercise/template").HandlerFunc(gymService.HandleEditWorkoutTemplate)
 	apiRouter.Methods("DELETE").Path("/exercise/template").HandlerFunc(gymService.HandleDeleteWorkoutTemplate)

@@ -5,6 +5,9 @@ import (
 	"jen-and-reece-backend/db"
 	"log"
 	"net/http"
+	"strconv"
+
+	"github.com/gorilla/mux"
 )
 
 type ExerciseName struct {
@@ -85,18 +88,21 @@ func logExercise(exerciseLog ExerciseLog) {
 	insertValues := `VALUES ($1,$2,$3,$4`
 	args := []interface{}{exerciseLog.Id, exerciseLog.Date, *exerciseLog.FirstSet.Weight, *exerciseLog.FirstSet.Reps}
 
+	// awful nesting but dont want to e.g. log 3rd set if 2nd doesnt exist
 	if secondSet := exerciseLog.SecondSet; secondSet != nil {
 		insertColumns += `, set_2_weight, set_2_reps`
 		insertValues += `,$5,$6`
 		args = append(args, *secondSet.Weight, *secondSet.Reps)
-	} else if thirdSet := exerciseLog.ThirdSet; thirdSet != nil {
-		insertColumns += `, set_3_weight, set_3_reps`
-		insertValues += `,$7,$8`
-		args = append(args, *thirdSet.Weight, *thirdSet.Reps)
-	} else if fourthSet := exerciseLog.FourthSet; fourthSet != nil {
-		insertColumns += `, set_4_weight, set_4_reps`
-		insertValues += `,$9,$10`
-		args = append(args, *fourthSet.Weight, *fourthSet.Reps)
+		if thirdSet := exerciseLog.ThirdSet; thirdSet != nil {
+			insertColumns += `, set_3_weight, set_3_reps`
+			insertValues += `,$7,$8`
+			args = append(args, *thirdSet.Weight, *thirdSet.Reps)
+			if fourthSet := exerciseLog.FourthSet; fourthSet != nil {
+				insertColumns += `, set_4_weight, set_4_reps`
+				insertValues += `,$9,$10`
+				args = append(args, *fourthSet.Weight, *fourthSet.Reps)
+			}
+		}
 	}
 
 	insertColumns += `) `
@@ -119,4 +125,52 @@ func HandleLogExercise(w http.ResponseWriter, r *http.Request) {
 	}
 
 	w.WriteHeader(http.StatusNoContent)
+}
+
+func HandleGetExerciseHistory(w http.ResponseWriter, r *http.Request) {
+	exerciseId, err := strconv.Atoi(mux.Vars(r)["exerciseId"])
+	if err != nil {
+		log.Printf("err in strconv %v", err)
+	}
+
+	query := `SELECT * FROM exercise_log where exercise_id=$1 ORDER BY date_completed DESC LIMIT 3;`
+	rows, err := db.DB.Query(query, exerciseId)
+	if err != nil {
+		log.Printf("err in query %v", err)
+	}
+	defer rows.Close()
+
+	var res []ExerciseLog
+	for rows.Next() {
+		var exerciseRow ExerciseLog
+		exerciseRow.SecondSet = &ExerciseSet{}
+		exerciseRow.ThirdSet = &ExerciseSet{}
+		exerciseRow.FourthSet = &ExerciseSet{}
+		err := rows.Scan(&exerciseRow.Id, &exerciseRow.Date, &exerciseRow.FirstSet.Weight, &exerciseRow.FirstSet.Reps, &exerciseRow.SecondSet.Weight, &exerciseRow.SecondSet.Reps, &exerciseRow.ThirdSet.Weight, &exerciseRow.ThirdSet.Reps, &exerciseRow.FourthSet.Weight, &exerciseRow.FourthSet.Reps)
+
+		if err != nil {
+			log.Printf("err in scan %v", err)
+			continue
+		}
+
+		if exerciseRow.SecondSet.Weight == nil || exerciseRow.SecondSet.Reps == nil {
+			exerciseRow.SecondSet = nil
+		}
+		if exerciseRow.ThirdSet.Weight == nil || exerciseRow.ThirdSet.Reps == nil {
+			exerciseRow.ThirdSet = nil
+		}
+		if exerciseRow.FourthSet.Weight == nil || exerciseRow.FourthSet.Reps == nil {
+			exerciseRow.FourthSet = nil
+		}
+
+		exerciseRow.Date = exerciseRow.Date[0:10]
+		res = append(res, exerciseRow)
+	}
+
+	if err := rows.Err(); err != nil {
+		log.Printf("err after all scans %v", err)
+	}
+
+	w.WriteHeader(http.StatusOK)
+	json.NewEncoder(w).Encode(res)
 }

@@ -29,6 +29,8 @@ const GymTracker = () => {
     fetchExerciseData();
   }, []);
 
+  const goBack = () => setActiveWorkout({id: 0, isActive: false});
+
   return (
     <>
     {
@@ -44,8 +46,8 @@ const GymTracker = () => {
       </List>
       :
       <>
-        <Button onClick={() => setActiveWorkout({id: 0, isActive: false})}>BACK</Button>
-        <WorkoutComponent workout={workouts.find(wkout => wkout.id === activeWorkout.id) as Workout}></WorkoutComponent>
+        <Button onClick={goBack}>BACK</Button>
+        {workouts && <WorkoutComponent workout={workouts.find(wkout => wkout.id === activeWorkout.id) as Workout} onSubmit={goBack} />}
       </>
     }
     </>

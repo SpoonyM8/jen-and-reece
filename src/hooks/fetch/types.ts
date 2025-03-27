@@ -30,3 +30,19 @@ export type Workout = {
   exercises: Exercise[];
   name: string;
 }
+
+type ExerciseSet = {
+  weight: number;
+  reps: number;
+}
+
+type NullableExerciseSet = ExerciseSet | null;
+
+export type ExerciseLogResponse = {
+  id: string;
+  firstSet: ExerciseSet;
+  secondSet: NullableExerciseSet;
+  thirdSet: NullableExerciseSet;
+  fourthSet: NullableExerciseSet;
+  dateCompleted: string; //YYYY-MM-DD
+}

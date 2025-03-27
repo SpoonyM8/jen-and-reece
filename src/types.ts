@@ -21,6 +21,6 @@ export type ExerciseSets = {
   fourthSet?: ExerciseSet
 }
 
-export type ExerciseSetsByName = {
-  [exerciseName: string]: ExerciseSets
+export type ExerciseSetsWithId = ExerciseSets & {
+  id: number;
 }
