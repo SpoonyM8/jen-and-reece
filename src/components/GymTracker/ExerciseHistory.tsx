@@ -1,8 +1,8 @@
-import { useEffect, useState } from "react"
+import { useEffect } from "react"
 import { BASE_API_URL } from "../../consts"
 import { Exercise, ExerciseLogResponse } from "../../hooks/fetch/types"
 import useFetch from "../../hooks/fetch/useFetch"
-import { Box, Button, Modal, Typography } from "@mui/material"
+import { Box,  Modal, Typography } from "@mui/material"
 
 const style = {
   position: 'absolute',
