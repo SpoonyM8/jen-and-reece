@@ -9,7 +9,7 @@ const ExerciseManager = () => {
   const [createdExercises, setCreatedExercises] = useState<Exercise[]>([]);
 
   const exercises = createdExercises.concat(exerciseData || []);
-  console.log(exercises)
+
   useEffect(() => {
     fetchExerciseData();
   }, [])
@@ -20,9 +20,9 @@ const ExerciseManager = () => {
 
   return (
     <>
-    <NewExercise onAddNewExercise={onAddNewExercise} />
+    <NewExercise key="New Exercise" onAddNewExercise={onAddNewExercise} />
     {exercises?.map(exercise => 
-      <EditableExercise exercise={exercise} />
+      <EditableExercise key={`Editable ${exercise.id}`} exercise={exercise} />
     )}
     </>
   )

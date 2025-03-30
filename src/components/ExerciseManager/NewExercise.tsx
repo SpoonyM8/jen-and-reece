@@ -38,8 +38,8 @@ const NewExercise: React.FC<NewExerciseProps> = ({ onAddNewExercise }) => {
         {expanded && (
           <>
             <TextField fullWidth size='small' autoFocus onChange={(e) => textFieldRef.current = e.target.value}/>
-            <IconButton edge='end' size='small'>
-              <CheckIcon onClick={() => onAdd()} color="success"/>
+            <IconButton onClick={onAdd} edge='end' size='small'>
+              <CheckIcon color="success"/>
             </IconButton>
           </>
         )}
