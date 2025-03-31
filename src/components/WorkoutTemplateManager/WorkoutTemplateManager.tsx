@@ -8,7 +8,6 @@ import WorkoutEditor from "./WorkoutEditor";
 const WorkoutTemplateManager = () => {
   const { data: workoutData, fetchData: fetchWorkoutData } = useFetchWorkouts();
   const { data: exerciseData, fetchData: fetchExerciseData } = useFetchExercises();
-  const [currentEdit, setCurrentEdit] = useState(-1);
 
   const workouts: Workout[] = useMemo(() => workoutData?.map(workout => {
     return {
@@ -29,9 +28,9 @@ const WorkoutTemplateManager = () => {
   return (
     <>
     <List>
-      {workouts?.map(workout => {
+      {exerciseData && workouts?.map(workout => {
         return (
-          <WorkoutEditor key={"WorkoutEditor: " + workout.id} workout={workout} /> 
+          <WorkoutEditor key={"WorkoutEditor: " + workout.id} workout={workout} exercises={exerciseData}/> 
         )
       })}
     </List>
