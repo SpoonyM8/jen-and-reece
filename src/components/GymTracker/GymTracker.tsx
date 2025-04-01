@@ -47,7 +47,7 @@ const GymTracker = () => {
       :
       <>
         <Button onClick={goBack}>BACK</Button>
-        {workouts && <WorkoutComponent workout={workouts.find(wkout => wkout.id === activeWorkout.id) as Workout} onSubmit={goBack} />}
+        {workouts && exerciseData && <WorkoutComponent workout={workouts.find(wkout => wkout.id === activeWorkout.id) as Workout} onSubmit={goBack} exercises={exerciseData}/>}
       </>
     }
     </>

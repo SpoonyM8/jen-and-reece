@@ -2,8 +2,9 @@ import { useEffect, useMemo, useState } from "react";
 import useFetchExercises from "../../hooks/fetch/useFetchExercises";
 import useFetchWorkouts from "../../hooks/fetch/useFetchWorkouts";
 import { Exercise, Workout } from "../../hooks/fetch/types";
-import { Button, List, ListItem, ListItemText } from "@mui/material";
+import { List } from "@mui/material";
 import WorkoutEditor from "./WorkoutEditor";
+import WorkoutCreator from "./WorkoutCreator";
 
 const WorkoutTemplateManager = () => {
   const { data: workoutData, fetchData: fetchWorkoutData } = useFetchWorkouts();
@@ -28,6 +29,7 @@ const WorkoutTemplateManager = () => {
   return (
     <>
     <List>
+      {exerciseData && <WorkoutCreator exercises={exerciseData}/>}
       {exerciseData && workouts?.map(workout => {
         return (
           <WorkoutEditor key={"WorkoutEditor: " + workout.id} workout={workout} exercises={exerciseData}/> 

@@ -1,4 +1,4 @@
-import { useRef, useState } from "react";
+import { useState } from "react";
 import { Exercise } from "../../hooks/fetch/types"
 import { IconButton, ListItem, MenuItem, Select } from "@mui/material";
 import AddIcon from '@mui/icons-material/Add';
@@ -8,8 +8,9 @@ import CheckIcon from '@mui/icons-material/Check'
 type NewExerciseProps = {
   exercises: Exercise[];
   onAddNewExercise: (exercise: Exercise) => void;
+  alwaysExpanded?: boolean;
 }
-const NewExercise: React.FC<NewExerciseProps> = ({ exercises, onAddNewExercise }) => {
+const NewExercise: React.FC<NewExerciseProps> = ({ exercises, onAddNewExercise, alwaysExpanded = false }) => {
   const [expanded, setExpanded] = useState(false);
   const [selected, setSelected] = useState<Exercise>();
 
@@ -24,19 +25,23 @@ const NewExercise: React.FC<NewExerciseProps> = ({ exercises, onAddNewExercise }
   return (
     <>
       <ListItem sx={{justifyContent: 'center'}}>
+        {!alwaysExpanded && 
         <IconButton onClick={() => setExpanded(!expanded)}>
-          {expanded ? <MinusIcon color="info"/> : <AddIcon color="info"/>} 
+        {expanded ? <MinusIcon color="info"/> : <AddIcon color="info"/>} 
         </IconButton>
+        }
       </ListItem>
       <ListItem sx={{justifyContent: 'center' }}>
-        {expanded && (
+        {expanded || alwaysExpanded && (
           <>
-            <Select onChange={(e) => {
+            <Select
+            onChange={(e) => {
               setSelected({
                 id: e.target.value as number,
                 name: exercises.find(exercise => exercise.id === e.target.value)?.name as string
               })
-            }}>
+            }}
+            defaultValue={''}>
               {
                 exercises.map(exercise => 
                   <MenuItem key={exercise.id} value={exercise.id}>

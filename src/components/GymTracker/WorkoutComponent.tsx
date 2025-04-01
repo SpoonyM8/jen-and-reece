@@ -1,5 +1,5 @@
 import React, { useRef } from "react";
-import { Workout } from "../../hooks/fetch/types";
+import { Exercise, Workout } from "../../hooks/fetch/types";
 import { Button, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography } from "@mui/material";
 import ExerciseRow from "./ExerciseRow";
 import { ExerciseSetsWithId } from "../../types";
@@ -8,6 +8,7 @@ import useFetchExerciseLog from "../../hooks/fetch/useFetchExerciseLog";
 type WorkoutComponentProps = {
   workout: Workout;
   onSubmit: () => void;
+  exercises: Exercise[];
 }
 const WorkoutComponent: React.FC<WorkoutComponentProps> = ({ workout, onSubmit }) => {
   const { fetchData } = useFetchExerciseLog();
@@ -23,7 +24,8 @@ const WorkoutComponent: React.FC<WorkoutComponentProps> = ({ workout, onSubmit }
     const todayDate = new Date(); 
     todayDate.setMinutes(todayDate.getMinutes() - todayDate.getTimezoneOffset());
     
-    const body = refs.current.map(exercise => ({
+    // Dont include exercises that were not filled out
+    const body = refs.current.filter(exercise => exercise.firstSet.weight !== 0).map(exercise => ({
       ...exercise,
       dateCompleted: todayDate.toISOString().slice(0,10)
     }));
@@ -56,7 +58,7 @@ const WorkoutComponent: React.FC<WorkoutComponentProps> = ({ workout, onSubmit }
               const key = exercise.id;
               const elRef = (refs.current.find(ex => exercise.id === ex.id) as ExerciseSetsWithId);
               return <ExerciseRow key={key} exercise={exercise} exerciseRef={elRef}/>
-            })}     
+            })}
           </TableBody>
         </Table>
       </TableContainer>
